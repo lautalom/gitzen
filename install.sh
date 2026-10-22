@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# Universal installer for the lautalom/git shell plugin (git shortcuts).
+# Universal installer for gitzen - git shortcuts for bash / zsh / nushell.
 #
-# Designed for Arch-based, Hyprland-flavoured distros such as Omarchy and
-# CachyOS, but works on any Linux/macOS box running bash, zsh or nushell.
+# gitzen is a fork of davidde/git with a bash port, aimed at distros whose
+# login shell is bash, such as Omarchy and CachyOS (Arch-based, Hyprland).
 #
 # Usage:
 #   ./install.sh                 # auto-detect (bash on bash-login distros)
@@ -15,16 +15,16 @@
 #   ./install.sh --help
 #
 # Piped install, no manual checkout required:
-#   bash <(curl -fsSL https://raw.githubusercontent.com/lautalom/git/master/install.sh)
+#   bash <(curl -fsSL https://raw.githubusercontent.com/lautalom/gitzen/main/install.sh)
 #
 set -euo pipefail
 
 PROG="$(basename "${BASH_SOURCE[0]:-$0}")"
-REPO_URL="${GIT_PLUGIN_REPO:-https://github.com/lautalom/git.git}"
-LIB_DIR="${GIT_PLUGIN_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/git-plugin}"
+REPO_URL="${GITZEN_REPO:-https://github.com/lautalom/gitzen.git}"
+LIB_DIR="${GITZEN_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/gitzen}"
 
-MARK_BEGIN="# >>> git-plugin (lautalom/git) >>>"
-MARK_END="# <<< git-plugin (lautalom/git) <<<"
+MARK_BEGIN="# >>> gitzen >>>"
+MARK_END="# <<< gitzen <<<"
 
 MODE="auto"        # auto | bash | zsh | nu | all
 ACTION="install"   # install | uninstall
@@ -122,7 +122,7 @@ SRC_LOCAL=0
 locate_source() {
   local here=""
   here="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || true)"
-  if [ -n "$here" ] && { [ -f "$here/git.plugin.bash" ] || [ -f "$here/git.plugin.zsh" ]; }; then
+  if [ -n "$here" ] && { [ -f "$here/gitzen.plugin.bash" ] || [ -f "$here/gitzen.plugin.zsh" ]; }; then
     SRC_DIR="$here"; SRC_LOCAL=1
     return 0
   fi
@@ -130,7 +130,7 @@ locate_source() {
   if [ -d "$LIB_DIR/.git" ]; then
     info "Updating plugin checkout in $LIB_DIR"
     git -C "$LIB_DIR" pull --ff-only --quiet 2>/dev/null || warn "could not update $LIB_DIR; using what is there"
-  elif [ -f "$LIB_DIR/git.plugin.bash" ] || [ -f "$LIB_DIR/git.plugin.zsh" ]; then
+  elif [ -f "$LIB_DIR/gitzen.plugin.bash" ] || [ -f "$LIB_DIR/gitzen.plugin.zsh" ]; then
     info "Using existing plugin checkout in $LIB_DIR"
   else
     info "Cloning $REPO_URL into $LIB_DIR"
@@ -201,7 +201,7 @@ bash_rc() {
 
 install_bash() {
   local rc; rc="$(bash_rc)"
-  add_block "$rc" "source \"$SRC_DIR/git.plugin.bash\""
+  add_block "$rc" "source \"$SRC_DIR/gitzen.plugin.bash\""
   ok "bash shortcuts will load in new shells on this machine"
   if [ "$DISTRO" = omarchy ]; then
     info "Omarchy also ships its own few git aliases (g, gcm, gcam, gcad)."
@@ -213,7 +213,7 @@ install_bash() {
 uninstall_bash() {
   local rc; rc="$(bash_rc)"
   strip_block "$rc"
-  ok "removed git-plugin block from $(basename "$rc")"
+  ok "removed gitzen block from $(basename "$rc")"
 }
 
 # ---------------------------------------------------------------------------
@@ -230,7 +230,7 @@ install_zsh() {
 
   if [ -d "$zsh_root" ] && [ -d "$zsh_custom" ]; then
     # oh-my-zsh: drop the plugin into the custom plugins directory.
-    local target="$zsh_custom/plugins/git"
+    local target="$zsh_custom/plugins/gitzen"
     mkdir -p "$zsh_custom/plugins"
     if [ -L "$target" ] && [ "$(readlink -f "$target")" = "$(readlink -f "$SRC_DIR")" ]; then
       ok "oh-my-zsh plugin already linked at $target"
@@ -242,24 +242,43 @@ install_zsh() {
     ensure_omz_plugin_enabled "$rc"
   else
     # Plain zsh: source the plugin from the managed block.
-    add_block "$rc" "source \"$SRC_DIR/git.plugin.zsh\""
+    add_block "$rc" "source \"$SRC_DIR/gitzen.plugin.zsh\""
   fi
 }
 
 ensure_omz_plugin_enabled() {
   local rc="$1"
   [ -f "$rc" ] || { : > "$rc"; }
-  if grep -qE '^[[:space:]]*plugins=\([^)]*\bgit\b' "$rc"; then
-    ok "oh-my-zsh already loads the 'git' plugin"
+  if grep -qE '^[[:space:]]*plugins[^#]*\bgitzen\b' "$rc"; then
+    ok "oh-my-zsh already loads the 'gitzen' plugin"
     return 0
   fi
+
+  # Find the line that loads oh-my-zsh; plugins must be set before it.
+  local omz_line
+  omz_line=$(grep -nE '^[[:space:]]*(source|\.)[[:space:]]+.*oh-my-zsh\.sh' "$rc" | head -1 | cut -d: -f1)
+
   backup_once "$rc"
-  if grep -qE '^[[:space:]]*plugins=\(' "$rc"; then
-    sed -i '0,/plugins=(/s//plugins=(git /' "$rc"
-    ok "added 'git' to the plugins array in $(basename "$rc")"
+
+  if grep -qE '^[[:space:]]*plugins=\([^)]*\)[[:space:]]*$' "$rc"; then
+    # Single-line array: append to the end so gitzen wins over the default git plugin.
+    sed -i -E '0,/^([[:space:]]*plugins=\([^)]*)\)[[:space:]]*$/s//\1 gitzen)/' "$rc"
+    sed -i -E '0,/^([[:space:]]*)plugins=\( /s//\1plugins=(/' "$rc"
+    ok "added 'gitzen' to the plugins array in $(basename "$rc")"
+  elif [ -n "$omz_line" ] && [ "$omz_line" -gt 1 ]; then
+    # Multi-line (or absent) array: add an additive line just before oh-my-zsh loads.
+    local tmp; tmp="$(mktemp)"
+    awk -v n="$omz_line" 'NR==n { print "plugins+=(gitzen)" } { print }' "$rc" > "$tmp"
+    cat "$tmp" > "$rc"
+    rm -f "$tmp"
+    ok "added 'plugins+=(gitzen)' before oh-my-zsh loads in $(basename "$rc")"
   else
-    printf '\nplugins=(git)\n' >> "$rc"
-    ok "added 'plugins=(git)' to $(basename "$rc")"
+    printf '\nplugins+=(gitzen)\n' >> "$rc"
+    warn "could not find the oh-my-zsh source line; added 'plugins+=(gitzen)' at the end of $(basename "$rc")"
+  fi
+
+  if grep -qE '^[[:space:]]*plugins[^#]*\bgit\b' "$rc"; then
+    warn "the default oh-my-zsh 'git' plugin is also enabled; gitzen is listed last, so it wins"
   fi
 }
 
@@ -267,14 +286,16 @@ uninstall_zsh() {
   local rc; rc="$(zsh_rc)"
   local zsh_root="${ZSH:-$HOME/.oh-my-zsh}"
   local zsh_custom="${ZSH_CUSTOM:-$zsh_root/custom}"
-  local target="$zsh_custom/plugins/git"
+  local target="$zsh_custom/plugins/gitzen"
   if [ -L "$target" ]; then
     rm -f "$target"
     ok "removed oh-my-zsh plugin link $target"
-    warn "left 'git' in the plugins array of $(basename "$rc") (remove it manually if unwanted)"
+    if grep -qE '^[[:space:]]*plugins.*\bgitzen\b' "$rc"; then
+      warn "left 'gitzen' in the plugins list of $(basename "$rc") (remove it manually if unwanted)"
+    fi
   fi
   strip_block "$rc"
-  ok "removed git-plugin block from $(basename "$rc")"
+  ok "removed gitzen block from $(basename "$rc")"
 }
 
 # ---------------------------------------------------------------------------
@@ -286,13 +307,13 @@ nu_config() {
 
 install_nu() {
   local cfg; cfg="$(nu_config)"
-  add_block "$cfg" "source \"$SRC_DIR/git.plugin.nu\""
+  add_block "$cfg" "source \"$SRC_DIR/gitzen.plugin.nu\""
 }
 
 uninstall_nu() {
   local cfg; cfg="$(nu_config)"
   strip_block "$cfg"
-  ok "removed git-plugin block from $(basename "$cfg")"
+  ok "removed gitzen block from $(basename "$cfg")"
 }
 
 # ---------------------------------------------------------------------------
@@ -328,7 +349,7 @@ main() {
   esac
 
   if [ "$ACTION" = uninstall ]; then
-    info "Uninstalling git-plugin"
+    info "Uninstalling gitzen"
     [ "$want_bash" = 1 ] && uninstall_bash
     [ "$want_zsh" = 1 ] && uninstall_zsh
     [ "$want_nu" = 1 ] && uninstall_nu

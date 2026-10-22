@@ -665,9 +665,9 @@ function greh {
   # Restore a file from x commits before HEAD.
   # -> Defaults to 1 commit before HEAD if no second arg given.
   # Usage: greh path/to/file [<number of commits before HEAD>]
-  # - greh git.plugin.ps1: Restore git.plugin.ps1 to the version
+  # - greh gitzen.plugin.ps1: Restore gitzen.plugin.ps1 to the version
   #                        of the previous commit
-  # - greh git.plugin.ps1 2: Restore git.plugin.ps1 to the version
+  # - greh gitzen.plugin.ps1 2: Restore gitzen.plugin.ps1 to the version
   #                          of 2 commits back
 
   param (

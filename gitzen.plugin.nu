@@ -1,5 +1,5 @@
 ###################################
-#         Git shortcuts           #
+#      gitzen - Git shortcuts     #
 ###################################
 
 def --wrapped g [...args: string] {
