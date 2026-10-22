@@ -1,5 +1,10 @@
-# Custom git plugin
-This plugin is a complete replacement for the default oh-my-zsh git plugin,
+# gitzen
+
+**gitzen** is a curated set of git shortcuts — a fork of
+[davidde/git](https://github.com/davidde/git), extended with a bash port for
+bash-first distros such as **Omarchy** and **CachyOS**.
+
+The original is a complete replacement for the default oh-my-zsh git plugin,
 and provides quite a few useful aliases and functions.
 The motivation to replace the default plugin stems from the fact
 that it comes with some inconsistencies that make a few popular commands
@@ -14,7 +19,7 @@ The efficiency of these shortcuts is kind of lost when you have to remember
 different letters for the same subcommand depending on the parameter(s)
 you're using ...
 
-In this plugin, great care care is taken to make sure all aliases are the most
+In gitzen, great care is taken to make sure all aliases are the most
 intuitive they can possibly be.  
 On top of that, quite a few extra functions are added.
 
@@ -27,7 +32,7 @@ Works on Arch-based, Hyprland-flavoured distros such as **Omarchy** and
 **CachyOS**, and anywhere else with bash, zsh or nushell:
 
 ```
-curl -fsSL https://raw.githubusercontent.com/lautalom/git/master/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/lautalom/gitzen/main/install.sh | bash
 ```
 
 The script auto-detects your shell, appends a managed block to your rc file,
@@ -48,17 +53,16 @@ zsh plugin.
 
 ### oh-my-zsh
 
-To use this plugin, clone this repo to `~/.oh-my-zsh/custom/plugins`:
+Clone this repo into your custom plugins directory:
 ```
-git clone https://github.com/davidde/git.git ~/.oh-my-zsh/custom/plugins/git
+git clone https://github.com/lautalom/gitzen.git ~/.oh-my-zsh/custom/plugins/gitzen
 ```
-This will automatically override the default git plugin.
-
-If you aren't yet using the default plugin,
-add `git` to the plugins in your `~/.zshrc` file:
+Then add `gitzen` to the plugins in your `~/.zshrc` file:
 ```
-plugins=(git)
+plugins=(gitzen)
 ```
+If the default `git` plugin is also listed, keep `gitzen` after it so gitzen's
+aliases win. To replace the default plugin entirely, remove `git` from the list.
 
 
 ## Aliases cheatsheet
@@ -205,8 +209,8 @@ plugins=(git)
 >   - Etc.
 > 
 > Check out all commands with usage and clarifications in your local
-> [git.plugin.zsh](./git.plugin.zsh) or the
-> [repo's source code](https://github.com/davidde/git/blob/master/git.plugin.zsh).  
+> [gitzen.plugin.zsh](./gitzen.plugin.zsh) or the
+> [repo's source code](https://github.com/lautalom/gitzen/blob/main/gitzen.plugin.zsh).  
 > 
 > Alternatively, run `alias` to see *all* alias implementations,
 > or `galias` for this cheatsheet.  

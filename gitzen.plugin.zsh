@@ -1,3 +1,8 @@
+# gitzen - git shortcuts for zsh
+#
+# gitzen is a fork of davidde/git. This is the original zsh/oh-my-zsh plugin,
+# kept for zsh users; bash users should use gitzen.plugin.bash.
+#
 # Aliases
 #############
 
@@ -338,7 +343,10 @@ function git_count() {
 
 # List all git aliases from the README:
 function git_list_aliases() {
-  filename=~/.oh-my-zsh/custom/plugins/git/README.md
+  local plugin_file=${(%):-%x}
+  local filename=${plugin_file:A:h}/README.md
+  # Fall back to the oh-my-zsh custom plugin path if the file is not readable:
+  [[ -r $filename ]] || filename=~/.oh-my-zsh/custom/plugins/gitzen/README.md
   from=$(grep -Fno '| **g** ' ${filename} | cut -f1 -d:)
   stop=$(grep -no '&nbsp;' ${filename} | cut -f1 -d:)
   to=$((stop - 2))
