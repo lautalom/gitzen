@@ -1,4 +1,4 @@
-# git plugin for bash
+# gitzen
 
 A set of consistent, memorable git aliases and helper functions for **bash**,
 built for distros where bash is the login shell (Omarchy, CachyOS, Arch, ...).
@@ -14,29 +14,29 @@ alias follows one logic, and quite a few extra functions are added.
 ## Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lautalom/git/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/lautalom/gitzen/main/install.sh | bash
 ```
 
 Or from a clone:
 
 ```bash
-git clone https://github.com/lautalom/git.git
-cd git
+git clone https://github.com/lautalom/gitzen.git
+cd gitzen
 ./install.sh
 ```
 
 The installer appends a managed block to `~/.bashrc`:
 
 ```bash
-# >>> git-plugin (lautalom/git) >>>
-source "/path/to/git.plugin.bash"
-# <<< git-plugin (lautalom/git) <<<
+# >>> gitzen >>>
+source "/path/to/gitzen.plugin.bash"
+# <<< gitzen <<<
 ```
 
 Open a new terminal (or `source ~/.bashrc`) and try `gs`, `glo`, `gaa`, `galias`.
 Remove it with `./install.sh --uninstall`.
 
-Manual install: add `source ~/path/to/git/git.plugin.bash` to the end of `~/.bashrc`.
+Manual install: add `source ~/path/to/gitzen/gitzen.plugin.bash` to the end of `~/.bashrc`.
 
 ### Omarchy
 
@@ -47,8 +47,8 @@ which is kept so Omarchy's `git commit -a --amend` still works.
 ### Notes
 
 - `gstshl` maps to `git diff stash@{0}` (`git stash show` has no `-l` flag).
-- `galias` reads this README from `$GIT_PLUGIN_DIR` if set, otherwise from the
-  directory containing `git.plugin.bash`.
+- `galias` reads this README from `$GITZEN_DIR` if set, otherwise from the
+  directory containing `gitzen.plugin.bash`.
 
 
 ## Aliases cheatsheet
@@ -195,4 +195,4 @@ which is kept so Omarchy's `git commit -a --amend` still works.
 >   - Etc.
 > 
 > Check out all commands with usage and clarifications in your local
-> [git.plugin.bash](./git.plugin.bash).
+> [gitzen.plugin.bash](./gitzen.plugin.bash).
