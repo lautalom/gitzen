@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Installer for the lautalom/git bash plugin (git shortcuts).
+# Installer for gitzen, the bash git shortcuts plugin (git shortcuts).
 #
 # Usage:
 #   ./install.sh               # install
@@ -8,17 +8,20 @@
 #   ./install.sh --help
 #
 # Piped install, no manual checkout required:
-#   curl -fsSL https://raw.githubusercontent.com/lautalom/git/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/lautalom/gitzen/main/install.sh | bash
 #
 set -euo pipefail
 
 PROG="$(basename "${BASH_SOURCE[0]:-$0}")"
-REPO_URL="${GIT_PLUGIN_REPO:-https://github.com/lautalom/git.git}"
-LIB_DIR="${GIT_PLUGIN_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/git-plugin}"
+REPO_URL="${GITZEN_REPO:-https://github.com/lautalom/gitzen.git}"
+LIB_DIR="${GITZEN_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/gitzen}"
 RC="$HOME/.bashrc"
 
-MARK_BEGIN="# >>> git-plugin (lautalom/git) >>>"
-MARK_END="# <<< git-plugin (lautalom/git) <<<"
+MARK_BEGIN="# >>> gitzen >>>"
+MARK_END="# <<< gitzen <<<"
+# Block written by earlier versions, when this was "git-plugin":
+OLD_MARK_BEGIN="# >>> git-plugin (lautalom/git) >>>"
+OLD_MARK_END="# <<< git-plugin (lautalom/git) <<<"
 
 ACTION="install"   # install | uninstall
 
@@ -60,7 +63,7 @@ SRC_LOCAL=0
 locate_source() {
   local here=""
   here="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || true)"
-  if [ -n "$here" ] && [ -f "$here/git.plugin.bash" ]; then
+  if [ -n "$here" ] && [ -f "$here/gitzen.plugin.bash" ]; then
     SRC_DIR="$here"; SRC_LOCAL=1
     return 0
   fi
@@ -78,7 +81,7 @@ locate_source() {
 
 backup_once() {
   [ -s "$RC" ] || return 0
-  if ! grep -qF "$MARK_BEGIN" "$RC" 2>/dev/null; then
+  if ! grep -qF -e "$MARK_BEGIN" -e "$OLD_MARK_BEGIN" "$RC" 2>/dev/null; then
     local bak="$RC.bak.$(date +%s)"
     cp -a "$RC" "$bak"
     ok "backed up $(basename "$RC") -> $(basename "$bak")"
@@ -88,9 +91,9 @@ backup_once() {
 strip_block() {
   [ -f "$RC" ] || return 0
   local tmp; tmp="$(mktemp)"
-  awk -v b="$MARK_BEGIN" -v e="$MARK_END" '
-    $0 == b { skip = 1 }
-    skip && $0 == e { skip = 0; next }
+  awk -v b="$MARK_BEGIN" -v e="$MARK_END" -v ob="$OLD_MARK_BEGIN" -v oe="$OLD_MARK_END" '
+    $0 == b || $0 == ob { skip = 1 }
+    skip && ($0 == e || $0 == oe) { skip = 0; next }
     skip { next }
     { print }
   ' "$RC" > "$tmp"
@@ -115,7 +118,7 @@ install_plugin() {
   strip_block
   {
     printf '\n%s\n' "$MARK_BEGIN"
-    printf 'source "%s/git.plugin.bash"\n' "$SRC_DIR"
+    printf 'source "%s/gitzen.plugin.bash"\n' "$SRC_DIR"
     printf '%s\n' "$MARK_END"
   } >> "$RC"
   ok "updated $(basename "$RC")"
@@ -134,9 +137,9 @@ install_plugin() {
 }
 
 if [ "$ACTION" = uninstall ]; then
-  info "Uninstalling git-plugin"
+  info "Uninstalling gitzen"
   strip_block
-  ok "removed git-plugin block from $(basename "$RC")"
+  ok "removed gitzen block from $(basename "$RC")"
 else
   install_plugin
 fi

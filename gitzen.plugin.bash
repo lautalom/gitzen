@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# lautalom/git - git shortcuts for bash
+# gitzen - git shortcuts for bash
 #
 # Git shortcuts for bash on distros whose login shell is bash
 # (Omarchy, CachyOS, Arch, ...). See README.md for the tag map.
@@ -8,13 +8,13 @@
 # Loading this file defines aliases and functions. It is meant to be SOURCED
 # from an interactive shell, e.g. from ~/.bashrc:
 #
-#     source /path/to/git.plugin.bash
+#     source /path/to/gitzen.plugin.bash
 #
 # Install it for you with:  ./install.sh --shell bash
 
 # Guard against double-sourcing.
-[[ -n ${GIT_PLUGIN_BASH_LOADED:-} ]] && return 0
-GIT_PLUGIN_BASH_LOADED=1
+[[ -n ${GITZEN_BASH_LOADED:-} ]] && return 0
+GITZEN_BASH_LOADED=1
 
 # Aliases
 #############
@@ -261,7 +261,7 @@ function git_count() {
 
 # List all git aliases from the README:
 function git_list_aliases() {
-  local filename="${GIT_PLUGIN_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}/README.md"
+  local filename="${GITZEN_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}/README.md"
   local from stop to pad
   if [[ ! -f $filename ]]; then
     echo "git_list_aliases: cannot find $filename" >&2
