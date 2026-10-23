@@ -1,64 +1,54 @@
-# Custom git plugin
-This plugin is a complete replacement for the default oh-my-zsh git plugin,
-and provides quite a few useful aliases and functions.
-The motivation to replace the default plugin stems from the fact
-that it comes with some inconsistencies that make a few popular commands
-rather unintuitive:
-* `gcm='git checkout master'`: this is inconsistent with `gco='git checkout'`,  
- and on top of that it steals what should be the shortcut for `git commit -m`.
-* Similar issues with `git log`: half of the commands use `glg`, the other half `gl`,  
-  but `gl` by itself is `git pull` (!?), for which `gpl` would make more sense.
-* ...
+# git plugin for bash
 
-The efficiency of these shortcuts is kind of lost when you have to remember
-different letters for the same subcommand depending on the parameter(s)
-you're using ...
+A set of consistent, memorable git aliases and helper functions for **bash**,
+built for distros where bash is the login shell (Omarchy, CachyOS, Arch, ...).
 
-In this plugin, great care care is taken to make sure all aliases are the most
-intuitive they can possibly be.  
-On top of that, quite a few extra functions are added.
+Forked from [davidde/git](https://github.com/davidde/git), whose zsh plugin
+inspired the tag map. This fork is bash-only.
+
+Many popular git shortcuts are inconsistent out of the box
+(`gcm` stealing `git commit -m`, `gl` meaning `git pull`, ...). Here every
+alias follows one logic, and quite a few extra functions are added.
 
 
 ## Installation
 
-### One-command install (bash, zsh or nushell)
-
-Works on Arch-based, Hyprland-flavoured distros such as **Omarchy** and
-**CachyOS**, and anywhere else with bash, zsh or nushell:
-
-```
+```bash
 curl -fsSL https://raw.githubusercontent.com/lautalom/git/master/install.sh | bash
 ```
 
-The script auto-detects your shell, appends a managed block to your rc file,
-and supports `--shell bash|zsh|nu|all` plus `--uninstall`. See
-[install.sh](./install.sh) for details.
+Or from a clone:
 
-### bash (Omarchy / CachyOS default)
-
-Omarchy and CachyOS keep bash as the login shell on purpose — switching it can
-break the boot chain. Use the **bash port** instead:
-
-```
-./install.sh --shell bash
+```bash
+git clone https://github.com/lautalom/git.git
+cd git
+./install.sh
 ```
 
-See [README-bash.md](./README-bash.md) for details and the differences from the
-zsh plugin.
+The installer appends a managed block to `~/.bashrc`:
 
-### oh-my-zsh
+```bash
+# >>> git-plugin (lautalom/git) >>>
+source "/path/to/git.plugin.bash"
+# <<< git-plugin (lautalom/git) <<<
+```
 
-To use this plugin, clone this repo to `~/.oh-my-zsh/custom/plugins`:
-```
-git clone https://github.com/davidde/git.git ~/.oh-my-zsh/custom/plugins/git
-```
-This will automatically override the default git plugin.
+Open a new terminal (or `source ~/.bashrc`) and try `gs`, `glo`, `gaa`, `galias`.
+Remove it with `./install.sh --uninstall`.
 
-If you aren't yet using the default plugin,
-add `git` to the plugins in your `~/.zshrc` file:
-```
-plugins=(git)
-```
+Manual install: add `source ~/path/to/git/git.plugin.bash` to the end of `~/.bashrc`.
+
+### Omarchy
+
+Omarchy defines `g`, `gcm`, `gcam` and `gcad` in its default aliases. Since
+`~/.bashrc` sources those first, this plugin's definitions win, except `gcad`,
+which is kept so Omarchy's `git commit -a --amend` still works.
+
+### Notes
+
+- `gstshl` maps to `git diff stash@{0}` (`git stash show` has no `-l` flag).
+- `galias` reads this README from `$GIT_PLUGIN_DIR` if set, otherwise from the
+  directory containing `git.plugin.bash`.
 
 
 ## Aliases cheatsheet
@@ -205,10 +195,4 @@ plugins=(git)
 >   - Etc.
 > 
 > Check out all commands with usage and clarifications in your local
-> [git.plugin.zsh](./git.plugin.zsh) or the
-> [repo's source code](https://github.com/davidde/git/blob/master/git.plugin.zsh).  
-> 
-> Alternatively, run `alias` to see *all* alias implementations,
-> or `galias` for this cheatsheet.  
-> If you want to see any specific implementation, simply run `which <alias/function>`.
--------------------------------------------------------------------------------
+> [git.plugin.bash](./git.plugin.bash).

@@ -2,8 +2,8 @@
 #
 # lautalom/git - git shortcuts for bash
 #
-# A bash port of git.plugin.zsh, for distros whose login shell is bash
-# (Omarchy, CachyOS, Arch, ...). See README-bash.md for the tag map.
+# Git shortcuts for bash on distros whose login shell is bash
+# (Omarchy, CachyOS, Arch, ...). See README.md for the tag map.
 #
 # Loading this file defines aliases and functions. It is meant to be SOURCED
 # from an interactive shell, e.g. from ~/.bashrc:
