@@ -8,7 +8,7 @@
 #   ./install.sh --help
 #
 # Piped install, no manual checkout required:
-#   curl -fsSL https://raw.githubusercontent.com/lautalom/git/master/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/lautalom/git/main/install.sh | bash
 #
 set -euo pipefail
 

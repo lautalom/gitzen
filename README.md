@@ -14,7 +14,7 @@ alias follows one logic, and quite a few extra functions are added.
 ## Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lautalom/git/master/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/lautalom/git/main/install.sh | bash
 ```
 
 Or from a clone:
