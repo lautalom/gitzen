@@ -60,49 +60,53 @@ which is kept so Omarchy's `git commit -a --amend` still works.
 | **gaa**         | git add --all                                             |
 | **gai**         | git add --interactive                                     |
 | **galias**      | git_list_aliases                                          |
-| **gam**         | **g**it commit --**a**mend -**m**                         |
-| **gama**        | **g**it commit --**a**mend -**m** --**a**ll               |
-| **gan**         | **g**it commit --**a**mend --**n**o-edit                  |
-| **gana**        | **g**it commit --**a**mend --**n**o-edit --**a**ll        |
+| **gam**         | git commit --amend -m                                     |
+| **gama**        | git commit --amend -am                                    |
+| **gan**         | git commit --amend --no-edit                              |
+| **gana**        | git commit --amend --no-edit -a                           |
 | **gap**         | git add --patch                                           |
 | **gb**          | git branch                                                |
 | **gba**         | git branch --all                                          |
 | **gbd**         | git branch --delete                                       |
 | **gbdf**        | git branch --delete --force                               |
 | **gbl**         | git blame                                                 |
-| **gbll**        | git_blame_line *\<file> [\<from line>] [\<to line>]*      |
-| **gbls**        | git branch --list \| cat                                  |
+| **gbll**        | git_blame_line \<file> [\<from line>] [\<to line>]        |
+| **gbls**        | git branch --list                                         |
 | **gbs**         | git bisect                                                |
 | **gbsb**        | git bisect bad                                            |
 | **gbsg**        | git bisect good                                           |
 | **gbsr**        | git bisect reset                                          |
 | **gbss**        | git bisect start                                          |
 | **gc**          | git commit --verbose                                      |
+| **gcad**        | git commit -a --amend                                     |
 | **gcam**        | git commit -am                                            |
-| **gcame**       | git commit -am --allow-empty-message ""                   |
-| **gcamg**       | git commit -am --gpg-sign                                 |
-| **gcams**       | git commit -am --signoff                                  |
+| **gcame**       | git commit --allow-empty-message -am ""                   |
+| **gcamg**       | git commit --gpg-sign -am                                 |
+| **gcams**       | git commit --signoff -am                                  |
+| **gcamu**       | git commit -am "Update"                                   |
 | **gcem**        | git commit --allow-empty -m                               |
 | **gcf**         | git config                                                |
-| **gcfl**        | git config --list                                         |
-| **gcfls**       | git config --list \| cat                                  |
-| **gcl**         | git clone --recurse-submodules                            |
-| **gclcd**       | git_clone_and_cd                                          |
+| **gcfg**        | git config --global                                       |
+| **gcfl**        | git config --local                                        |
+| **gcfls**       | git config --list                                         |
+| **gcl**         | git_clone_and_cd                                          |
 | **gcm**         | git commit -m                                             |
-| **gcmg**        | git commit -m --gpg-sign                                  |
-| **gcms**        | git commit -m --signoff                                   |
+| **gcmg**        | git commit --gpg-sign -m                                  |
+| **gcms**        | git commit --signoff -m                                   |
 | **gcnt**        | git_count                                                 |
-| **gcnta**       | git_count_all                                             |
 | **gco**         | git checkout                                              |
 | **gcob**        | git checkout -b                                           |
 | **gcobb**       | "checkout branch before": git checkout -                  |
-| **gcoc**        | git_checkout_child                                        |
+| **gcoc**        | git_checkout_child [\<n>]                                 |
 | **gcod**        | git checkout develop                                      |
+| **gcof**        | git checkout -f                                           |
 | **gcom**        | git checkout $(git_main_branch)                           |
-| **gcop**        | git_checkout_parent                                       |
+| **gcop**        | git_checkout_parent [\<n>]                                |
 | **gcp**         | git cherry-pick                                           |
 | **gcpa**        | git cherry-pick --abort                                   |
 | **gcpc**        | git cherry-pick --continue                                |
+| **gcpq**        | git cherry-pick --quit                                    |
+| **gcps**        | git cherry-pick --skip                                    |
 | **gd**          | git diff                                                  |
 | **gds**         | git diff --staged                                         |
 | **gdst**        | git diff stash@{0}                                        |
@@ -110,89 +114,107 @@ which is kept so Omarchy's `git commit -a --amend` still works.
 | **gdstp**       | git diff stash@{0}^ stash@{0}                             |
 | **gf**          | git fetch                                                 |
 | **gfo**         | git fetch origin                                          |
-| **ggb**         | "git graph branches"                                      |
-| **gignore**     | git update-index --skip-worktree                          |
-| **gunignore**   | git update-index --no-skip-worktree                       |
-| **gignored**    | git ls-files -v \| grep ^S                                |
-| **gl**          | git log --name-status                                     |
-| **glf**         | git_log_file *\<file> [\<from line>] [\<to line>]*        |
-| **glg**         | git log --graph                                           |
-| **glgo**        | git log --graph --oneline                                 |
-| **glgs**        | git log --graph --stat                                    |
+| **gg**          | git log --graph --all                                     |
+| **ggb**         | git log --graph --all --simplify-by-decoration            |
+| **ggbo**        | git log --graph --all --oneline --simplify-by-decoration  |
+| **ggo**         | git log --graph --all --oneline                           |
+| **gi**          | git init                                                  |
+| **gib**         | git init --bare                                           |
+| **gig**         | git update-index --skip-worktree                          |
+| **gl**          | glog -10                                                  |
+| **glf**         | git_log_file \<file> [\<from line>] [\<to line>]          |
 | **glo**         | git log --oneline                                         |
-| **gloc**        | git_locate_string *\<Line-of-Code> [\<file>]*             |
-| **glog**        | git log                                                   |
-| **glr**         | git log --reverse --name-status                           |
-| **gls**         | git ls-files                                              |
+| **gloc**        | git_locate_string \<Line-of-Code> [\<file>]               |
+| **glog**        | git log --reverse --name-status                           |
+| **glsb**        | git branch --list                                         |
+| **glsf**        | git ls-files                                              |
+| **glsig**       | git ls-files -v \| grep ^S                                |
+| **glsr**        | git remote -v                                             |
+| **glss**        | git config -f .gitmodules --name-only --get-regexp path   |
+| **glsst**       | git stash list                                            |
+| **glst**        | git tag --list                                            |
 | **gm**          | git merge                                                 |
+| **gmnff**       | git merge --no-ff                                         |
 | **gmom**        | git merge origin/$(git_main_branch)                       |
+| **gmsq**        | git merge --squash                                        |
 | **gmum**        | git merge upstream/$(git_main_branch)                     |
 | **gmv**         | git mv                                                    |
-| **gp**          | git push                                                  |
-| **gpd**         | git push --delete                                         |
-| **gpdo**        | git push --delete origin                                  |
-| **gpf**         | git push --force-with-lease                               |
-| **gpt**         | git push && git push --tags                               |
+| **gph**         | git push                                                  |
+| **gphd**        | git push --delete                                         |
+| **gphdo**       | git push --delete origin                                  |
+| **gphf**        | git push --force-with-lease                               |
+| **gphff**       | git push --force                                          |
+| **gpht**        | git push && git push --tags                               |
+| **gphu**        | git push -u                                               |
+| **gphuo**       | git push -u origin                                        |
+| **gphuom**      | git push -u origin main                                   |
 | **gpl**         | git pull                                                  |
+| **gpla**        | git pull --autostash                                      |
 | **gplr**        | git pull --rebase                                         |
 | **gplrs**       | git pull --recurse-submodules                             |
 | **gr**          | git reset                                                 |
+| **grb**         | git rebase                                                |
+| **grbm**        | git rebase $(git_main_branch)                             |
+| **gre**         | git restore                                               |
+| **grea**        | git restore .                                             |
+| **grem**        | git remote                                                |
+| **grema**       | git remote add                                            |
+| **gremao**      | git remote add origin                                     |
+| **gremls**      | git remote -v                                             |
+| **gremrm**      | git remote rm                                             |
+| **gremrmo**     | git remote rm origin                                      |
+| **gremset**     | git remote set-url                                        |
+| **gremseto**    | git remote set-url origin                                 |
+| **gremsh**      | git remote show                                           |
+| **gremv**       | git remote -v                                             |
+| **grh**         | git_reset_head --mixed                                    |
 | **grhard**      | git reset --hard                                          |
-| **grk**         | git reset --keep                                          |
-| **grs**         | git reset --soft                                          |
-| **grh**         | git_reset_head                                            |
 | **grhhard**     | git_reset_head --hard                                     |
 | **grhk**        | git_reset_head --keep                                     |
 | **grhs**        | git_reset_head --soft                                     |
-| **grb**         | git rebase                                                |
-| **grbm**        | git rebase $(git_main_branch)                             |
-| **grem**        | git remote                                                |
-| **grema**       | git remote add                                            |
-| **gremrm**      | git remote rm                                             |
-| **gremset**     | git remote set-url                                        |
-| **gremsh**      | git remote show                                           |
-| **gremv**       | git remote -v                                             |
+| **grk**         | git reset --keep                                          |
 | **grl**         | git reflog                                                |
 | **grm**         | git rm                                                    |
+| **grs**         | git reset --soft                                          |
 | **gs**          | git status                                                |
 | **gsh**         | git show                                                  |
-| **gshsf**       | git_show_stash_file *\<file> [\<stash number>]*           |
-| **gss**         | git_status_short                                          |
+| **gshsf**       | git_show_stash_file \<file> [\<stash number>]             |
+| **gss**         | git_status_short [\<number of commits>]                   |
 | **gst**         | git stash                                                 |
 | **gsta**        | git stash apply                                           |
 | **gstd**        | git stash drop                                            |
-| **gstl**        | git stash list                                            |
-| **gstls**       | git stash list \| cat                                     |
-| **gstp**        | git stash push                                            |
-| **gstpop**      | git stash pop                                             |
-| **gstsl**       | git stash show -l                                         |
-| **gstsp**       | git stash show -p                                         |
+| **gstls**       | git stash list                                            |
+| **gstph**       | git stash push                                            |
+| **gstpp**       | git stash pop                                             |
+| **gstshl**      | git diff stash@{0}                                        |
+| **gstshp**      | git stash show -p                                         |
 | **gsub**        | git submodule                                             |
 | **gsuba**       | git submodule add                                         |
+| **gsubf**       | git submodule foreach                                     |
+| **gsubfpl**     | git submodule foreach git pull                            |
+| **gsubfplom**   | git submodule foreach git pull origin $(git_main_branch)  |
 | **gsubi**       | git submodule update --init                               |
-| **gsubpl**      | git submodule foreach git pull                            |
-| **gsubplom**    | git submodule foreach git pull origin $(git_main_branch)  |
 | **gsubs**       | git submodule status                                      |
 | **gsubu**       | git submodule update --remote --merge                     |
 | **gt**          | git tag                                                   |
 | **gtam**        | git tag -am                                               |
-| **gtsm**        | git tag -sm                                               |
 | **gtd**         | git tag --delete                                          |
-| **gtl**         | git tag --list                                            |
-| **gtls**        | git tag --list \| cat                                     |
-| **gwch**        | git whatchanged -p                                        |
+| **gtls**        | git tag --list                                            |
+| **gtsm**        | git tag -sm                                               |
+| **gug**         | git update-index --no-skip-worktree                       |
+| **gwta**        | git worktree add                                          |
+
 &nbsp;
 
 
 -------------------------------------------------------------------------------
 > :warning: **Note:**  
 > 
-> This cheatsheet is optimized for memorability,
-> and may not correspond literally with the actual aliases. E.g.:
->   - "git graph branches"
->   - `git log` commands are actually more verbose for nicer output.
->   - `git commit -m --gpg-sign` has its flags switched because `-m` needs to be last.
->   - Etc.
-> 
+> This cheatsheet is optimized for memorability; some descriptions are
+> abbreviated. E.g.:
+>   - `glog`, `gl` and `glo` use a custom, more verbose `git log` format.
+>   - `gg`, `ggo`, `ggb` and `ggbo` use a custom graph format.
+>   - `gcl` clones with submodules and then `cd`s into the repository.
+>
 > Check out all commands with usage and clarifications in your local
 > [gitzen.plugin.bash](./gitzen.plugin.bash).
